@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BEURER — 5-Finger AI Manicure Dock</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============ DESIGN TOKENS ============ */
+  :root{
+    --cream:#FBF1EC;
+    --surface:#FFFFFF;
+    --ink:#241820;
+    --ink-soft:#6E5860;
+    --rose:#E9A9B8;
+    --rose-deep:#C05E76;
+    --rose-pale:#F7DCE2;
+    --gold:#C9A56A;
+    --lavender:#9C8FC4;
+    --lavender-pale:#EDE9F7;
+    --line:#EAD9D3;
+    --radius:22px;
+    --shadow:0 20px 50px -20px rgba(36,24,32,0.25);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Inter',sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3,.display{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  .tech{
+    font-family:'Space Grotesk',sans-serif;
+  }
+  a{color:inherit;}
+  img{max-width:100%;display:block;}
+  button{font-family:inherit;cursor:pointer;}
+  :focus-visible{outline:3px solid var(--lavender);outline-offset:2px;}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-family:'Space Grotesk',sans-serif;
+    text-transform:uppercase;
+    letter-spacing:0.16em;
+    font-size:12px;
+    color:var(--rose-deep);
+    font-weight:600;
+  }
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    border:none;border-radius:100px;
+    padding:14px 26px;
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:14px;
+    letter-spacing:0.02em;
+    transition:transform .18s ease, box-shadow .18s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn-primary{background:var(--ink);color:var(--cream);}
+  .btn-primary:hover{box-shadow:0 12px 24px -8px rgba(36,24,32,0.45);}
+  .btn-rose{background:var(--rose-deep);color:#fff;}
+  .btn-rose:hover{box-shadow:0 12px 24px -8px rgba(192,94,118,0.55);}
+  .btn-ghost{background:transparent;color:var(--ink);border:1.5px solid var(--ink);}
+  .btn-ghost:hover{background:var(--ink);color:var(--cream);}
+  .btn-block{width:100%;justify-content:center;}
+  .btn[disabled]{opacity:0.45;cursor:not-allowed;transform:none;}
+
+  /* ============ NAV ============ */
+  header.nav{
+    position:sticky;top:0;z-index:60;
+    background:rgba(251,241,236,0.86);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-row{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:18px 32px;max-width:1180px;margin:0 auto;
+  }
+  .logo{
+    font-family:'Fraunces',serif;font-size:22px;font-weight:700;
+    display:flex;align-items:center;gap:8px;
+  }
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--rose-deep);display:inline-block;}
+  .nav-links{display:flex;gap:30px;list-style:none;padding:0;margin:0;font-size:14px;font-weight:500;}
+  .nav-links a{text-decoration:none;padding-bottom:3px;border-bottom:2px solid transparent;transition:border-color .15s;}
+  .nav-links a:hover{border-color:var(--rose-deep);}
+  .nav-actions{display:flex;align-items:center;gap:14px;}
+  .icon-btn{
+    position:relative;background:var(--surface);border:1px solid var(--line);
+    width:42px;height:42px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:16px;
+  }
+  .icon-btn:hover{border-color:var(--rose-deep);}
+  .badge-count{
+    position:absolute;top:-6px;right:-6px;background:var(--rose-deep);color:#fff;
+    font-size:10px;font-weight:700;min-width:18px;height:18px;border-radius:9px;
+    display:flex;align-items:center;justify-content:center;padding:0 4px;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .points-pill{
+    display:flex;align-items:center;gap:6px;
+    background:var(--lavender-pale);color:#4b3f7a;
+    border-radius:100px;padding:8px 14px;font-size:12.5px;font-weight:600;
+    font-family:'Space Grotesk',sans-serif;
+  }
+
+  /* ============ HERO ============ */
+  .hero{padding:64px 0 40px;}
+  .hero-grid{display:grid;grid-template-columns:1.05fr 1fr;gap:56px;align-items:center;}
+  .hero-copy .eyebrow{margin-bottom:16px;display:block;}
+  .hero-copy h1{font-size:52px;line-height:1.04;margin-bottom:20px;}
+  .hero-copy h1 em{font-style:italic;color:var(--rose-deep);}
+  .hero-copy p{font-size:17px;color:var(--ink-soft);max-width:480px;margin-bottom:28px;}
+  .hero-cta{display:flex;gap:14px;align-items:center;flex-wrap:wrap;}
+  .price-tag{font-family:'Space Grotesk',sans-serif;font-size:15px;color:var(--ink-soft);}
+  .price-tag b{font-size:20px;color:var(--ink);}
+  .hero-stats{display:flex;gap:28px;margin-top:36px;}
+  .hero-stats div{border-left:2px solid var(--rose);padding-left:12px;}
+  .hero-stats b{display:block;font-family:'Space Grotesk',sans-serif;font-size:20px;}
+  .hero-stats span{font-size:12.5px;color:var(--ink-soft);}
+
+  .hero-visual{position:relative;}
+  .hero-photo-card{
+    border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);
+    border:1px solid var(--line);position:relative;
+  }
+  .hero-photo-card img{width:100%;height:100%;object-fit:cover;}
+  .scan-readout{
+    position:absolute;bottom:18px;left:18px;right:18px;
+    background:rgba(36,24,32,0.82);backdrop-filter:blur(6px);
+    color:#fff;border-radius:16px;padding:14px 16px;
+    font-family:'Space Grotesk',sans-serif;font-size:12.5px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .pulse-dot{width:8px;height:8px;border-radius:50%;background:#8CE0A8;flex:none;animation:pulse 1.4s infinite;}
+  @keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  .float-chip{
+    position:absolute;background:var(--surface);border:1px solid var(--line);
+    border-radius:14px;padding:10px 14px;box-shadow:var(--shadow);
+    font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:600;
+    display:flex;align-items:center;gap:8px;
+  }
+  .float-chip.c1{top:-16px;right:12px;}
+  .float-chip.c2{bottom:-18px;left:-18px;}
+
+  /* ============ SECTION SHELL ============ */
+  section{padding:88px 0;}
+  .section-head{max-width:620px;margin-bottom:52px;}
+  .section-head .eyebrow{display:block;margin-bottom:12px;}
+  .section-head h2{font-size:36px;margin-bottom:14px;}
+  .section-head p{color:var(--ink-soft);font-size:16px;}
+  .band-alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+
+  /* ============ HOW IT WORKS ============ */
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:22px;}
+  .step-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:26px 22px;position:relative;transition:transform .2s ease, box-shadow .2s ease;
+  }
+  .step-card:hover{transform:translateY(-6px);box-shadow:var(--shadow);}
+  .step-num{
+    font-family:'Space Grotesk',sans-serif;font-size:13px;color:var(--rose-deep);
+    font-weight:700;margin-bottom:14px;
+  }
+  .step-icon{font-size:26px;margin-bottom:10px;}
+  .step-card h3{font-size:17px;margin-bottom:8px;font-weight:600;font-family:'Space Grotesk',sans-serif;}
+  .step-card p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+
+  /* ============ SCAN DOCK INTERACTIVE (signature element) ============ */
+  .dock-demo{
+    background:var(--ink);border-radius:28px;padding:48px;margin-top:56px;
+    display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;color:var(--cream);
+  }
+  .dock-demo h3{color:#fff;font-size:24px;margin-bottom:10px;}
+  .dock-demo p{color:#d8c8ce;font-size:14.5px;margin-bottom:18px;}
+  .fingers{display:flex;gap:16px;justify-content:center;}
+  .finger-hole{
+    width:56px;height:88px;border-radius:28px;
+    background:#33232b;border:2px solid #4a3540;
+    display:flex;align-items:flex-end;justify-content:center;padding-bottom:10px;
+    cursor:pointer;transition:all .25s ease;position:relative;
+  }
+  .finger-hole:hover, .finger-hole.active{
+    border-color:var(--rose);box-shadow:0 0 24px 2px rgba(233,169,184,0.55);
+  }
+  .finger-hole span{width:10px;height:10px;border-radius:50%;background:#5c4653;transition:background .25s;}
+  .finger-hole.active span{background:var(--rose);box-shadow:0 0 10px 3px rgba(233,169,184,0.8);}
+  .dock-readout{
+    margin-top:20px;font-family:'Space Grotesk',sans-serif;font-size:13px;
+    background:#33232b;border-radius:14px;padding:14px 16px;min-height:20px;
+  }
+
+  /* ============ PERSONALIZATION QUIZ ============ */
+  .quiz-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:36px;box-shadow:var(--shadow);
+  }
+  .quiz-options{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:22px 0;}
+  .quiz-opt{
+    background:var(--cream);border:1.5px solid var(--line);border-radius:14px;
+    padding:16px 12px;text-align:center;font-size:13.5px;font-weight:600;
+    font-family:'Space Grotesk',sans-serif;
+  }
+  .quiz-opt:hover{border-color:var(--rose-deep);}
+  .quiz-opt.selected{background:var(--rose-pale);border-color:var(--rose-deep);}
+  .quiz-result{
+    display:none;margin-top:22px;padding:20px 22px;border-radius:16px;
+    background:var(--lavender-pale);border:1px solid #d9d0f0;
+  }
+  .quiz-result.show{display:block;}
+  .quiz-result .eyebrow{color:#5c4d9c;}
+
+  /* ============ SHOP GRID ============ */
+  .shop-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:26px;}
+  .product-card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s ease, transform .2s ease;
+  }
+  .product-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);}
+  .product-media{
+    height:190px;display:flex;align-items:center;justify-content:center;
+    font-size:48px;background:linear-gradient(160deg,var(--rose-pale),var(--lavender-pale));
+  }
+  .product-media.hero-item{padding:0;}
+  .product-media.hero-item img{width:100%;height:100%;object-fit:cover;}
+  .product-body{padding:20px;display:flex;flex-direction:column;gap:8px;flex:1;}
+  .product-body h3{font-size:16.5px;font-family:'Space Grotesk',sans-serif;}
+  .product-body p{font-size:13px;color:var(--ink-soft);margin:0;flex:1;}
+  .product-foot{display:flex;align-items:center;justify-content:space-between;margin-top:10px;}
+  .product-foot b{font-family:'Space Grotesk',sans-serif;font-size:17px;}
+  .add-btn{
+    border:none;background:var(--ink);color:var(--cream);border-radius:100px;
+    padding:9px 16px;font-size:12.5px;font-weight:700;font-family:'Space Grotesk',sans-serif;
+    transition:background .2s;
+  }
+  .add-btn:hover{background:var(--rose-deep);}
+  .add-btn.added{background:#5c9c72;}
+
+  /* ============ AI CHATBOT ============ */
+  .chat-launcher{
+    position:fixed;bottom:26px;right:26px;z-index:80;
+    width:60px;height:60px;border-radius:50%;
+    background:var(--ink);color:var(--cream);border:none;
+    font-size:24px;box-shadow:0 14px 30px -10px rgba(36,24,32,0.6);
+  }
+  .chat-launcher .ping{
+    position:absolute;top:-2px;right:-2px;width:14px;height:14px;border-radius:50%;
+    background:var(--rose-deep);border:2px solid var(--cream);
+  }
+  .chat-panel{
+    position:fixed;bottom:98px;right:26px;z-index:81;width:330px;max-height:460px;
+    background:var(--surface);border-radius:20px;border:1px solid var(--line);
+    box-shadow:var(--shadow);display:none;flex-direction:column;overflow:hidden;
+  }
+  .chat-panel.open{display:flex;}
+  .chat-head{background:var(--ink);color:#fff;padding:16px 18px;}
+  .chat-head b{font-family:'Space Grotesk',sans-serif;font-size:14px;}
+  .chat-head span{display:block;font-size:11.5px;color:#c9b7bf;margin-top:2px;}
+  .chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:var(--cream);}
+  .msg{max-width:82%;padding:10px 13px;border-radius:14px;font-size:13px;line-height:1.45;}
+  .msg.bot{background:var(--surface);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px;}
+  .msg.user{background:var(--rose-deep);color:#fff;align-self:flex-end;border-bottom-right-radius:4px;}
+  .chat-suggest{display:flex;flex-wrap:wrap;gap:6px;padding:0 16px 12px;background:var(--cream);}
+  .chip-btn{
+    background:var(--surface);border:1px solid var(--line);border-radius:100px;
+    padding:6px 11px;font-size:11.5px;font-family:'Space Grotesk',sans-serif;
+  }
+  .chip-btn:hover{border-color:var(--rose-deep);}
+  .chat-input{display:flex;border-top:1px solid var(--line);padding:10px;gap:8px;background:var(--surface);}
+  .chat-input input{
+    flex:1;border:1px solid var(--line);border-radius:100px;padding:10px 14px;font-size:13px;font-family:inherit;
+  }
+  .chat-input button{
+    border:none;background:var(--ink);color:var(--cream);border-radius:50%;width:38px;height:38px;font-size:15px;
+  }
+
+  /* ============ REVIEWS / SENTIMENT AI ============ */
+  .review-layout{display:grid;grid-template-columns:0.9fr 1.1fr;gap:40px;align-items:flex-start;}
+  .review-form{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:28px;box-shadow:var(--shadow);
+  }
+  .review-form textarea{
+    width:100%;border:1px solid var(--line);border-radius:14px;padding:14px;
+    font-family:inherit;font-size:14px;resize:vertical;min-height:100px;margin:14px 0;
+  }
+  .sentiment-preview{
+    display:none;align-items:center;gap:10px;padding:12px 14px;border-radius:12px;
+    font-family:'Space Grotesk',sans-serif;font-size:12.5px;font-weight:600;margin-bottom:14px;
+  }
+  .sentiment-preview.show{display:flex;}
+  .sentiment-preview.positive{background:#e4f3e8;color:#2f6b45;}
+  .sentiment-preview.negative{background:#fbe6e6;color:#a13636;}
+  .sentiment-preview.neutral{background:#f0eee6;color:#6b6248;}
+  .review-list{display:flex;flex-direction:column;gap:16px;max-height:520px;overflow-y:auto;padding-right:6px;}
+  .review-item{
+    background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;
+  }
+  .review-item-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .review-item-head b{font-family:'Space Grotesk',sans-serif;font-size:13.5px;}
+  .tag{
+    font-size:10.5px;font-weight:700;padding:4px 10px;border-radius:100px;
+    font-family:'Space Grotesk',sans-serif;text-transform:uppercase;letter-spacing:0.04em;
+  }
+  .tag.positive{background:#e4f3e8;color:#2f6b45;}
+  .tag.negative{background:#fbe6e6;color:#a13636;}
+  .tag.neutral{background:#f0eee6;color:#6b6248;}
+  .stars{color:var(--gold);font-size:13px;letter-spacing:1px;}
+  .review-item p{margin:0;font-size:13.5px;color:var(--ink-soft);}
+
+  /* ============ REWARDS / GAMIFICATION ============ */
+  .rewards-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:44px;align-items:center;}
+  .progress-card{
+    background:var(--ink);color:var(--cream);border-radius:var(--radius);padding:36px;
+  }
+  .progress-card h3{color:#fff;font-size:22px;margin-bottom:6px;}
+  .progress-card p{color:#d8c8ce;font-size:13.5px;margin-bottom:22px;}
+  .bar-track{background:#3a2830;border-radius:100px;height:14px;overflow:hidden;}
+  .bar-fill{background:linear-gradient(90deg,var(--rose),var(--gold));height:100%;width:0%;transition:width .5s ease;}
+  .bar-labels{display:flex;justify-content:space-between;margin-top:8px;font-family:'Space Grotesk',sans-serif;font-size:11.5px;color:#c9b7bf;}
+  .badge-list{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:26px;}
+  .badge-item{
+    background:#33232b;border-radius:14px;padding:14px;text-align:center;
+    opacity:0.4;transition:opacity .3s ease, transform .3s ease;
+  }
+  .badge-item.unlocked{opacity:1;transform:scale(1.03);}
+  .badge-item .ic{font-size:22px;display:block;margin-bottom:6px;}
+  .badge-item span{font-size:11px;font-family:'Space Grotesk',sans-serif;}
+  .how-earn{display:flex;flex-direction:column;gap:16px;}
+  .earn-row{display:flex;gap:14px;align-items:flex-start;background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 18px;}
+  .earn-row .ic{font-size:20px;}
+  .earn-row b{font-family:'Space Grotesk',sans-serif;font-size:13.5px;display:block;}
+  .earn-row span{font-size:12.5px;color:var(--ink-soft);}
+
+  /* ============ ABOUT / FUTURE ============ */
+  .about-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;}
+  .about-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;}
+  .about-card h3{font-family:'Space Grotesk',sans-serif;font-size:16px;margin-bottom:8px;}
+  .about-card p{font-size:13.5px;color:var(--ink-soft);margin:0;}
+
+  /* ============ FOOTER ============ */
+  footer{background:var(--ink);color:#d8c8ce;padding:56px 0 28px;margin-top:40px;}
+  .foot-grid{display:flex;justify-content:space-between;flex-wrap:wrap;gap:30px;padding-bottom:36px;border-bottom:1px solid #3a2830;}
+  footer h4{color:#fff;font-family:'Space Grotesk',sans-serif;font-size:13px;margin-bottom:14px;}
+  footer .logo{color:#fff;}
+  .foot-bottom{display:flex;justify-content:space-between;padding-top:22px;font-size:12px;color:#9a8790;flex-wrap:wrap;gap:10px;}
+
+  /* ============ MODALS (login / cart / checkout) ============ */
+  .overlay{
+    position:fixed;inset:0;background:rgba(36,24,32,0.55);backdrop-filter:blur(3px);
+    display:none;align-items:center;justify-content:center;z-index:90;padding:20px;
+  }
+  .overlay.open{display:flex;}
+  .modal{
+    background:var(--surface);border-radius:24px;width:100%;max-width:420px;
+    padding:32px;position:relative;max-height:88vh;overflow-y:auto;
+  }
+  .modal-close{
+    position:absolute;top:18px;right:18px;background:var(--cream);border:none;
+    width:32px;height:32px;border-radius:50%;font-size:15px;
+  }
+  .modal h3{font-size:22px;margin-bottom:6px;}
+  .modal .sub{font-size:13px;color:var(--ink-soft);margin-bottom:22px;}
+  .field{margin-bottom:16px;}
+  .field label{display:block;font-size:12px;font-weight:600;margin-bottom:6px;font-family:'Space Grotesk',sans-serif;}
+  .field input, .field select{
+    width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:14px;font-family:inherit;
+  }
+  .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .avatar-pick{display:flex;gap:10px;margin-bottom:18px;}
+  .avatar-pick button{
+    width:44px;height:44px;border-radius:50%;border:2px solid transparent;font-size:20px;
+    background:var(--cream);
+  }
+  .avatar-pick button.selected{border-color:var(--rose-deep);}
+
+  /* cart drawer */
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;width:400px;max-width:92vw;background:var(--surface);
+    z-index:95;box-shadow:-20px 0 50px -20px rgba(36,24,32,0.35);
+    transform:translateX(100%);transition:transform .3s ease;display:flex;flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;}
+  .drawer-body{flex:1;overflow-y:auto;padding:18px 24px;display:flex;flex-direction:column;gap:16px;}
+  .cart-row{display:flex;gap:12px;align-items:center;}
+  .cart-thumb{width:56px;height:56px;border-radius:12px;background:linear-gradient(160deg,var(--rose-pale),var(--lavender-pale));display:flex;align-items:center;justify-content:center;font-size:22px;flex:none;overflow:hidden;}
+  .cart-thumb img{width:100%;height:100%;object-fit:cover;}
+  .cart-info{flex:1;}
+  .cart-info b{font-size:13.5px;font-family:'Space Grotesk',sans-serif;display:block;}
+  .qty-ctrl{display:flex;align-items:center;gap:8px;margin-top:6px;}
+  .qty-ctrl button{width:22px;height:22px;border-radius:50%;border:1px solid var(--line);background:var(--cream);font-size:12px;}
+  .cart-price{font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;}
+  .remove-x{background:none;border:none;color:var(--ink-soft);font-size:12px;text-decoration:underline;cursor:pointer;padding:0;margin-top:6px;}
+  .drawer-foot{border-top:1px solid var(--line);padding:20px 24px;}
+  .sum-row{display:flex;justify-content:space-between;font-size:13.5px;margin-bottom:8px;color:var(--ink-soft);}
+  .sum-row.total{color:var(--ink);font-weight:700;font-size:16px;font-family:'Space Grotesk',sans-serif;margin-top:10px;}
+  .empty-state{text-align:center;padding:60px 20px;color:var(--ink-soft);font-size:13.5px;}
+  .empty-state .ic{font-size:32px;margin-bottom:10px;}
+
+  .step-dots{display:flex;gap:8px;margin-bottom:22px;}
+  .step-dots div{flex:1;height:4px;border-radius:4px;background:var(--line);}
+  .step-dots div.active{background:var(--rose-deep);}
+  .confirm-box{text-align:center;padding:20px 0;}
+  .confirm-box .ic{font-size:44px;margin-bottom:10px;}
+  .order-id{font-family:'Space Grotesk',sans-serif;background:var(--cream);border-radius:12px;padding:10px 14px;display:inline-block;font-size:13px;margin:12px 0;}
+
+  /* toast */
+  .toast-wrap{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:999;display:flex;flex-direction:column;gap:8px;align-items:center;}
+  .toast{
+    background:var(--ink);color:#fff;padding:12px 20px;border-radius:100px;font-size:13px;
+    font-family:'Space Grotesk',sans-serif;box-shadow:var(--shadow);
+    animation:toastIn .25s ease, toastOut .25s ease 2.3s forwards;
+  }
+  @keyframes toastIn{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes toastOut{to{opacity:0;transform:translateY(-10px);}}
+
+  @media (max-width:980px){
+    .hero-grid, .rewards-grid, .review-layout, .about-grid{grid-template-columns:1fr;}
+    .steps, .shop-grid{grid-template-columns:repeat(2,1fr);}
+    .quiz-options{grid-template-columns:repeat(2,1fr);}
+    .nav-links{display:none;}
+    .dock-demo{grid-template-columns:1fr;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toast-wrap" id="toastWrap"></div>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="nav-row">
+    <div class="logo"><span class="dot"></span>BEURER</div>
+    <ul class="nav-links">
+      <li><a href="#how-it-works">How it Works</a></li>
+      <li><a href="#personalize">Find Your Mode</a></li>
+      <li><a href="#shop">Shop</a></li>
+      <li><a href="#reviews">Reviews</a></li>
+      <li><a href="#rewards">Rewards</a></li>
+    </ul>
+    <div class="nav-actions">
+      <div class="points-pill">✦ <span id="pointsDisplay">0</span> pts</div>
+      <button class="icon-btn" id="loginBtn" title="Account" onclick="openLogin()">👤</button>
+      <button class="icon-btn" id="cartBtn" title="Cart" onclick="toggleDrawer(true)">🛍
+        <span class="badge-count" id="cartCount" style="display:none;">0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <span class="eyebrow">MULTI-PORT AUTOMATED CARE · 2036</span>
+      <h1>Five fingers.<br>One <em>15-second</em> manicure.</h1>
+      <p>Slide your hand into the dock. BEURER's micro-cameras scan every nail, then nano-polish, mist and UV-cleanse — no salon chair required.</p>
+      <div class="hero-cta">
+        <button class="btn btn-rose" onclick="addToCart('beurer-dock')">Add to Cart — Try It</button>
+        <button class="btn btn-ghost" onclick="scrollToId('how-it-works')">See How it Works</button>
+      </div>
+      <div class="hero-stats">
+        <div><b>15–30s</b><span>per hand, full cycle</span></div>
+        <div><b>99.9%</b><span>bacteria eliminated, UV-C</span></div>
+        <div><b>5</b><span>nails scanned at once</span></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="float-chip c1">🩷 5-Finger Simultaneous</div>
+      <div class="hero-photo-card">
+        <img src="beurer-hero.jpg" alt="BEURER 5-Finger AI Manicure Dock on a desk, a hand resting in the scanning ports">
+        <div class="scan-readout"><span class="pulse-dot"></span> Scanning nail geometry — port 4 of 5 · optimal pressure applied</div>
+      </div>
+      <div class="float-chip c2">🌸 Lavender + Eucalyptus mist</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section id="how-it-works" class="band-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">The Cycle</span>
+      <h2>What happens inside the dock</h2>
+      <p>Four automated stages run back to back, entirely on-device — this is the real order the hardware follows, so we number it like a process rather than a feature list.</p>
+    </div>
+    <div class="steps">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <div class="step-icon">📸</div>
+        <h3>Smart 3D Scanning</h3>
+        <p>Rest your hand on the pink surface and slide in. Micro-cameras in each port measure the size, curve and thickness of every nail in real time.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <div class="step-icon">✨</div>
+        <h3>Nano-Polishing</h3>
+        <p>Vibrating nano-glass pads trace each nail's natural curve for a mirror shine. Pressure sensors auto-soften for thin or sensitive nails.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <div class="step-icon">🌿</div>
+        <h3>Spa Aromatherapy Mist</h3>
+        <p>A warm lavender-eucalyptus scent fills the air while a micro-mist of Vitamin E, keratin and argan oil nourishes each nail bed.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <div class="step-icon">💠</div>
+        <h3>UV Flash & Self-Clean</h3>
+        <p>A 3-second built-in UV-C flash clears 99.9% of bacteria and dust from every port, so the dock is ready for the next hand instantly.</p>
+      </div>
+    </div>
+
+    <!-- Signature interactive element -->
+    <div class="dock-demo">
+      <div>
+        <span class="eyebrow" style="color:var(--rose);">TRY THE DEMO</span>
+        <h3>Tap a port to run a mock scan</h3>
+        <p>This mirrors the real dock's app readout — tap each finger hole in order and watch BEURER report back live, just like the companion app does over Bluetooth.</p>
+        <button class="btn btn-rose" onclick="resetDock()">Reset Demo</button>
+      </div>
+      <div>
+        <div class="fingers" id="fingerRow">
+          <div class="finger-hole" data-finger="Thumb"><span></span></div>
+          <div class="finger-hole" data-finger="Index"><span></span></div>
+          <div class="finger-hole" data-finger="Middle"><span></span></div>
+          <div class="finger-hole" data-finger="Ring"><span></span></div>
+          <div class="finger-hole" data-finger="Pinky"><span></span></div>
+        </div>
+        <div class="dock-readout tech" id="dockReadout">Awaiting hand placement…</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AI PERSONALIZATION QUIZ ============ -->
+<section id="personalize">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">AI Recommendation Engine</span>
+      <h2>Find your treatment mode</h2>
+      <p>Answer one question and BEURER's rule-based recommender suggests a mode, mist and add-on — the same "related products" logic described in our build guide, just running in your browser.</p>
+    </div>
+    <div class="quiz-card">
+      <p class="tech" style="font-size:13px;color:var(--ink-soft);margin:0 0 4px;">What's your main nail concern today?</p>
+      <div class="quiz-options" id="quizOptions">
+        <button class="quiz-opt" data-concern="brittle">Brittle / thin nails</button>
+        <button class="quiz-opt" data-concern="dull">Dull, no shine</button>
+        <button class="quiz-opt" data-concern="dry">Dry cuticles</button>
+        <button class="quiz-opt" data-concern="busy">No time to spare</button>
+      </div>
+      <div class="quiz-result" id="quizResult">
+        <span class="eyebrow">Recommended for you</span>
+        <h3 id="quizModeName" style="font-size:19px;margin:8px 0 6px;"></h3>
+        <p id="quizModeDesc" style="font-size:13.5px;color:#4b3f7a;margin:0 0 14px;"></p>
+        <button class="btn btn-primary" id="quizAddBtn">Add Recommended Add-On to Cart</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SHOP ============ -->
+<section id="shop" class="band-alt">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Shop BEURER</span>
+      <h2>The dock, and everything it needs</h2>
+      <p>Every add to cart is tracked live in the drawer on the right, and checkout is a fully mocked flow — no real payment is ever processed.</p>
+    </div>
+    <div class="shop-grid" id="shopGrid"><!-- injected by JS --></div>
+  </div>
+</section>
+
+<!-- ============ REVIEWS / SENTIMENT AI ============ -->
+<section id="reviews">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Sentiment-Aware Feedback</span>
+      <h2>Reviews, auto-tagged by our AI</h2>
+      <p>Write a review below — a lightweight keyword-sentiment model tags it "Loved it", "Needs improvement" or "Mixed" before it's even posted, so shoppers can scan feedback at a glance.</p>
+    </div>
+    <div class="review-layout">
+      <div class="review-form">
+        <h3 style="font-size:17px;">Leave a review</h3>
+        <p class="sub">Your text is analyzed instantly, on-device.</p>
+        <textarea id="reviewText" placeholder="e.g. My nails feel so smooth and the lavender scent is amazing, though the cycle felt a little slow..."></textarea>
+        <div class="sentiment-preview" id="sentimentPreview"></div>
+        <button class="btn btn-primary btn-block" onclick="submitReview()">Post Review (+15 pts)</button>
+      </div>
+      <div class="review-list" id="reviewList"><!-- injected by JS --></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ GAMIFICATION / REWARDS ============ -->
+<section id="rewards" class="band-alt">
+  <div class="wrap rewards-grid">
+    <div>
+      <span class="eyebrow">Spa Rewards</span>
+      <h2 style="margin:12px 0 26px;">Earn points, unlock badges</h2>
+      <div class="how-earn">
+        <div class="earn-row"><span class="ic">🔐</span><div><b>Create an account</b><span>+10 points, once</span></div></div>
+        <div class="earn-row"><span class="ic">🧪</span><div><b>Complete the nail-concern quiz</b><span>+10 points</span></div></div>
+        <div class="earn-row"><span class="ic">🛍️</span><div><b>Add an item to your cart</b><span>+5 points each</span></div></div>
+        <div class="earn-row"><span class="ic">💳</span><div><b>Complete mock checkout</b><span>+30 points</span></div></div>
+        <div class="earn-row"><span class="ic">💬</span><div><b>Post a review</b><span>+15 points</span></div></div>
+      </div>
+    </div>
+    <div class="progress-card">
+      <span class="eyebrow" style="color:var(--rose);">YOUR PROGRESS</span>
+      <h3 style="margin-top:10px;" id="rewardsPoints">0 points</h3>
+      <p id="nextBadgeCopy">Unlock "First Scan" at 10 points</p>
+      <div class="bar-track"><div class="bar-fill" id="progressBar"></div></div>
+      <div class="bar-labels"><span>0</span><span>100 · Beurer Insider</span></div>
+      <div class="badge-list" id="badgeList"><!-- injected by JS --></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ABOUT / FUTURE ============ -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="eyebrow">Why It's Different</span>
+      <h2>Built small on purpose</h2>
+      <p>BEURER borrows its engineering philosophy from foldable phones, not salon equipment — which is what lets a full manicure station sit next to your keyboard.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <h3>📦 Pocket-Sized Robotics</h3>
+        <p>Instead of bulky motors, BEURER uses the same micro-components found in foldable smartphones, keeping the whole dock slim, flat and light enough for a desk corner.</p>
+      </div>
+      <div class="about-card">
+        <h3>📶 Smart App Connection</h3>
+        <p>Paired over Bluetooth, the companion app logs your nail health over time and lets you choose spa scents or treatment intensity before every session.</p>
+      </div>
+      <div class="about-card">
+        <h3>🛡️ Adaptive Safety Sensors</h3>
+        <p>If a nail is thin or sensitive, pressure is automatically reduced mid-cycle — the same protective logic across all five ports, independently.</p>
+      </div>
+      <div class="about-card">
+        <h3>♻️ Self-Cleaning Between Uses</h3>
+        <p>The built-in UV-C flash means the dock is hygienic for the next person the moment your cycle ends — no manual sanitizing step.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <div class="logo">BEURER</div>
+        <p style="max-width:240px;font-size:13px;margin-top:10px;">The 5-finger AI manicure dock. Salon results, desk-side, in under 30 seconds.</p>
+      </div>
+      <div>
+        <h4>Shop</h4>
+        <p style="font-size:13px;margin:0 0 6px;">The Dock</p>
+        <p style="font-size:13px;margin:0 0 6px;">Mist Refills</p>
+        <p style="font-size:13px;margin:0;">Travel Case</p>
+      </div>
+      <div>
+        <h4>Support</h4>
+        <p style="font-size:13px;margin:0 0 6px;">Ask the AI Assistant</p>
+        <p style="font-size:13px;margin:0;">Shipping &amp; Returns (mock)</p>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2036 BEURER Beauty Tech — student project, IBM555 Global E-Commerce by Hani Ruqayyah Sahabuddin</span>
+      <span>Prices shown are illustrative for this assignment demo</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============ CHATBOT ============ -->
+<button class="chat-launcher" onclick="toggleChat()">💬<span class="ping"></span></button>
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-head">
+    <b>BEURER Assistant</b>
+    <span>Rule-based AI · replies instantly</span>
+  </div>
+  <div class="chat-body" id="chatBody">
+    <div class="msg bot">Hi! I'm the BEURER assistant. Ask me about price, timing, safety, ingredients or returns 🌸</div>
+  </div>
+  <div class="chat-suggest">
+    <button class="chip-btn" onclick="askChat('How much does it cost?')">Price?</button>
+    <button class="chip-btn" onclick="askChat('Is it safe for sensitive nails?')">Safety?</button>
+    <button class="chip-btn" onclick="askChat('How long does one hand take?')">Timing?</button>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Type a question…" onkeydown="if(event.key==='Enter')sendChat()">
+    <button onclick="sendChat()">➤</button>
+  </div>
+</div>
+
+<!-- ============ LOGIN MODAL ============ -->
+<div class="overlay" id="loginOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('loginOverlay')">✕</button>
+    <h3 id="loginTitle">Welcome to BEURER</h3>
+    <p class="sub" id="loginSub">Sign in (mock) to save points, cart and recommendations.</p>
+    <div id="loginForm">
+      <p class="tech" style="font-size:12px;font-weight:600;margin-bottom:8px;">Choose an avatar</p>
+      <div class="avatar-pick" id="avatarPick">
+        <button data-a="🌷">🌷</button>
+        <button data-a="✨">✨</button>
+        <button data-a="🦋">🦋</button>
+        <button data-a="🌙">🌙</button>
+      </div>
+      <div class="field">
+        <label for="nameInput">First name</label>
+        <input type="text" id="nameInput" placeholder="e.g. Mei">
+      </div>
+      <div class="field">
+        <label for="emailInput">Email</label>
+        <input type="email" id="emailInput" placeholder="you@example.com">
+      </div>
+      <button class="btn btn-primary btn-block" onclick="doLogin()">Sign In (+10 pts)</button>
+      <p style="font-size:11.5px;color:var(--ink-soft);text-align:center;margin-top:14px;">This is a simulated login for demo purposes only — no data leaves your browser.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CART DRAWER ============ -->
+<div class="overlay" id="drawerOverlay" onclick="if(event.target===this)toggleDrawer(false)">
+  <div class="drawer" id="cartDrawer" onclick="event.stopPropagation()">
+    <div class="drawer-head">
+      <h3 style="font-size:18px;">Your Cart</h3>
+      <button class="modal-close" style="position:static;" onclick="toggleDrawer(false)">✕</button>
+    </div>
+    <div class="drawer-body" id="cartBody"><!-- injected --></div>
+    <div class="drawer-foot" id="cartFoot" style="display:none;">
+      <div class="sum-row"><span>Subtotal</span><span id="sumSubtotal">RM 0.00</span></div>
+      <div class="sum-row"><span>Shipping</span><span id="sumShipping">RM 0.00</span></div>
+      <div class="sum-row total"><span>Total</span><span id="sumTotal">RM 0.00</span></div>
+      <button class="btn btn-rose btn-block" style="margin-top:14px;" onclick="openCheckout()">Checkout</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CHECKOUT MODAL ============ -->
+<div class="overlay" id="checkoutOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('checkoutOverlay')">✕</button>
+    <div class="step-dots">
+      <div id="dot1" class="active"></div><div id="dot2"></div><div id="dot3"></div>
+    </div>
+
+    <div id="checkoutStep1">
+      <h3>Shipping details</h3>
+      <p class="sub">Mock order — nothing is shipped or charged.</p>
+      <div class="field"><label>Full name</label><input type="text" id="shipName" placeholder="Jane Tan"></div>
+      <div class="field"><label>Address</label><input type="text" id="shipAddress" placeholder="12 Orchid Ave, Unit 4"></div>
+      <div class="field-row">
+        <div class="field"><label>City</label><input type="text" id="shipCity" placeholder="City"></div>
+        <div class="field"><label>Postal code</label><input type="text" id="shipZip" placeholder="00000"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="goStep(2)">Continue to Payment</button>
+    </div>
+
+    <div id="checkoutStep2" style="display:none;">
+      <h3>Mock payment</h3>
+      <p class="sub">Use any numbers — this is a simulated gateway for the assignment.</p>
+      <div class="field"><label>Card number</label><input type="text" id="cardNumber" maxlength="19" placeholder="4242 4242 4242 4242" oninput="formatCard(this)"></div>
+      <div class="field-row">
+        <div class="field"><label>Expiry</label><input type="text" id="cardExp" maxlength="5" placeholder="MM/YY" oninput="formatExp(this)"></div>
+        <div class="field"><label>CVV</label><input type="text" id="cardCvv" maxlength="3" placeholder="123"></div>
+      </div>
+      <button class="btn btn-primary btn-block" onclick="placeOrder()">Pay <span id="payAmount"></span></button>
+      <button class="btn btn-ghost btn-block" style="margin-top:10px;" onclick="goStep(1)">Back</button>
+    </div>
+
+    <div id="checkoutStep3" style="display:none;">
+      <div class="confirm-box">
+        <div class="ic">🌸</div>
+        <h3>Order confirmed</h3>
+        <p class="sub">A mock confirmation only — this demo does not process real payments.</p>
+        <div class="order-id tech" id="orderId"></div>
+        <p style="font-size:13px;color:var(--ink-soft);">+30 loyalty points added to your account.</p>
+        <button class="btn btn-primary btn-block" style="margin-top:16px;" onclick="closeModal('checkoutOverlay')">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =====================================================================
+   BEURER — client-side state (in-memory only, resets on page refresh)
+   ===================================================================== */
+const state = {
+  user: null,          // {name, email, avatar}
+  points: 0,
+  badges: {first_scan:false, shopper:false, insider:false, reviewer:false},
+  cart: [],             // [{id, qty}]
+  reviews: []
+};
+
+const PRODUCTS = {
+  'beurer-dock': {name:'BEURER 5-Finger AI Manicure Dock', price:249, emoji:null, photo:true, desc:'The full dock — scanning, nano-polish, aromatherapy mist and UV self-clean in one unit.'},
+  'mist-refill': {name:'Vitamin E · Keratin · Argan Mist Refill', price:24, emoji:'🧴', desc:'A 60-day supply of the nutrient mist used during the polishing cycle.'},
+  'travel-case': {name:'Fold-Flat Travel Case', price:39, emoji:'👜', desc:"Slim protective case built for the dock's pocket-sized robotics."},
+  'scent-pack': {name:'Spa Scent Pack — Lavender & Eucalyptus x3', price:19, emoji:'🌿', desc:'Three refill pods for the built-in aromatherapy diffuser.'},
+};
+
+const BADGES = {
+  first_scan:{ic:'🖐️', label:'First Scan', threshold:10},
+  shopper:{ic:'🛍️', label:'Trendsetter', threshold:35},
+  reviewer:{ic:'💬', label:'Voice Heard', threshold:60},
+  insider:{ic:'👑', label:'Beurer Insider', threshold:100},
+};
+
+const QUIZ_MODES = {
+  brittle:{name:'Gentle Strength Mode', desc:'Lower nano-polish pressure + extra keratin mist to reinforce brittle nails.', addon:'mist-refill'},
+  dull:{name:'High-Gloss Mode', desc:'Extended nano-polish pass for a stronger mirror shine on dull nails.', addon:'scent-pack'},
+  dry:{name:'Hydra-Mist Mode', desc:'Extra argan + Vitamin E mist cycle focused on cuticle hydration.', addon:'mist-refill'},
+  busy:{name:'Express 15s Mode', desc:'The fastest full-hand cycle — scanning and polish only, mist skipped.', addon:'travel-case'},
+};
+
+const CHAT_KB = [
+  {k:['price','cost','how much'], a:"The BEURER dock is RM 249. Refill mists and accessories start at RM 19."},
+  {k:['safe','sensitive','hurt','pain'], a:"Yes — built-in pressure sensors detect thin or sensitive nails and automatically reduce force mid-cycle."},
+  {k:['time','long','fast','minutes','seconds'], a:"One hand takes 15–30 seconds for the full scan, polish, mist and UV-clean cycle."},
+  {k:['clean','bacteria','hygien','uv'], a:"A 3-second UV-C flash runs after every cycle, eliminating 99.9% of bacteria in each port."},
+  {k:['ingredient','mist','vitamin','keratin','argan'], a:"The nutrient mist contains Vitamin E, keratin and argan oil, warmed slightly so nails absorb it better."},
+  {k:['return','refund','warranty'], a:"This is a class demo store, but in the full product a 30-day mock return policy is shown at checkout."},
+  {k:['battery','power','charge'], a:"BEURER plugs in via USB-C and also runs on a rechargeable battery for about 20 sessions per charge."},
+  {k:['app','bluetooth','phone'], a:"It pairs over Bluetooth with the BEURER app, which tracks nail health history and lets you pick scent/mode."},
+  {k:['size','bulky','small','portable'], a:"It uses the same micro-components as foldable phones, so it's slim enough for a desk corner, not a salon cart."},
+  {k:['point','reward','badge'], a:"You earn points for signing in, taking the quiz, adding to cart, checking out and posting reviews — see the Rewards section!"},
+];
+
+/* ---------- helpers ---------- */
+function $(id){return document.getElementById(id);}
+function toast(msg){
+  const t=document.createElement('div');
+  t.className='toast'; t.textContent=msg;
+  $('toastWrap').appendChild(t);
+  setTimeout(()=>t.remove(),2600);
+}
+function scrollToId(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+function money(n){return 'RM '+n.toFixed(2);}
+
+/* ---------- points / gamification ---------- */
+function addPoints(n, reason){
+  state.points += n;
+  $('pointsDisplay').textContent = state.points;
+  toast('+'+n+' points · '+reason);
+  refreshRewards();
+}
+function refreshRewards(){
+  $('rewardsPoints').textContent = state.points+' points';
+  const pct = Math.min(100, state.points);
+  $('progressBar').style.width = pct+'%';
+
+  let nextBadge = null;
+  Object.entries(BADGES).forEach(([key,b])=>{
+    if(state.points >= b.threshold) state.badges[key]=true;
+    if(!nextBadge && state.points < b.threshold) nextBadge = b;
+  });
+  $('nextBadgeCopy').textContent = nextBadge
+    ? `Unlock "${nextBadge.label}" at ${nextBadge.threshold} points`
+    : "All badges unlocked — you're an Beurer Insider ✨";
+
+  $('badgeList').innerHTML = Object.entries(BADGES).map(([key,b])=>`
+    <div class="badge-item ${state.badges[key]?'unlocked':''}">
+      <span class="ic">${b.ic}</span><span>${b.label}</span>
+    </div>`).join('');
+}
+
+/* ---------- login ---------- */
+let pickedAvatar='🌷';
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.querySelectorAll('#avatarPick button').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('#avatarPick button').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected'); pickedAvatar=btn.dataset.a;
+    });
+  });
+  document.querySelector('#avatarPick button').classList.add('selected');
+  renderShop(); renderCart(); refreshRewards(); renderReviews();
+});
+function openLogin(){
+  if(state.user){ toast('Signed in as '+state.user.name); return; }
+  $('loginOverlay').classList.add('open');
+}
+function closeModal(id){ $(id).classList.remove('open'); }
+function doLogin(){
+  const name = $('nameInput').value.trim() || 'Guest';
+  const email = $('emailInput').value.trim();
+  state.user = {name, email, avatar: pickedAvatar};
+  $('loginBtn').textContent = pickedAvatar;
+  closeModal('loginOverlay');
+  toast('Welcome, '+name+'!');
+  addPoints(10,'account created');
+}
+
+/* ---------- finger-hole scan demo ---------- */
+const fingerOrder = ['Thumb','Index','Middle','Ring','Pinky'];
+let scannedCount = 0;
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.querySelectorAll('.finger-hole').forEach(hole=>{
+    hole.addEventListener('click', ()=>{
+      if(hole.classList.contains('active')) return;
+      hole.classList.add('active');
+      scannedCount++;
+      $('dockReadout').textContent = `Scanning ${hole.dataset.finger}… geometry captured · optimal pressure applied`;
+      if(scannedCount === 5){
+        $('dockReadout').textContent = '✓ All 5 nails scanned — nano-polish cycle ready to begin';
+        if(!state.badges.first_scan){ addPoints(10,'completed a full scan'); }
+      }
+    });
+  });
+});
+function resetDock(){
+  document.querySelectorAll('.finger-hole').forEach(h=>h.classList.remove('active'));
+  scannedCount = 0;
+  $('dockReadout').textContent = 'Awaiting hand placement…';
+}
+
+/* ---------- personalization quiz ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  document.querySelectorAll('.quiz-opt').forEach(opt=>{
+    opt.addEventListener('click', ()=>{
+      document.querySelectorAll('.quiz-opt').forEach(o=>o.classList.remove('selected'));
+      opt.classList.add('selected');
+      const mode = QUIZ_MODES[opt.dataset.concern];
+      $('quizModeName').textContent = mode.name;
+      $('quizModeDesc').textContent = mode.desc;
+      $('quizResult').classList.add('show');
+      $('quizAddBtn').onclick = ()=>{ addToCart(mode.addon); };
+      addPoints(10,'took the nail-concern quiz');
+    });
+  });
+});
+
+/* ---------- shop / cart ---------- */
+function renderShop(){
+  $('shopGrid').innerHTML = Object.entries(PRODUCTS).map(([id,p])=>`
+    <div class="product-card">
+      <div class="product-media ${p.photo?'hero-item':''}">
+        ${p.photo ? `<img src="beurer-hero.jpg" alt="${p.name}">` : p.emoji}
+      </div>
+      <div class="product-body">
+        <h3>${p.name}</h3>
+        <p>${p.desc}</p>
+        <div class="product-foot">
+          <b>${money(p.price)}</b>
+          <button class="add-btn" id="btn-${id}" onclick="addToCart('${id}')">Add to Cart</button>
+        </div>
+      </div>
+    </div>`).join('');
+}
+function addToCart(id){
+  const line = state.cart.find(c=>c.id===id);
+  if(line) line.qty++; else state.cart.push({id, qty:1});
+  renderCart();
+  const btn = $('btn-'+id);
+  if(btn){ btn.textContent='Added ✓'; btn.classList.add('added'); setTimeout(()=>{btn.textContent='Add to Cart'; btn.classList.remove('added');},1200); }
+  addPoints(5,'added an item to cart');
+  toggleDrawer(true);
+}
+function changeQty(id, delta){
+  const line = state.cart.find(c=>c.id===id);
+  if(!line) return;
+  line.qty += delta;
+  if(line.qty<=0) state.cart = state.cart.filter(c=>c.id!==id);
+  renderCart();
+}
+function removeItem(id){ state.cart = state.cart.filter(c=>c.id!==id); renderCart(); }
+function cartTotals(){
+  const subtotal = state.cart.reduce((s,c)=> s + PRODUCTS[c.id].price * c.qty, 0);
+  const shipping = subtotal>0 ? (subtotal>200?0:9) : 0;
+  return {subtotal, shipping, total: subtotal+shipping};
+}
+function renderCart(){
+  const count = state.cart.reduce((s,c)=>s+c.qty,0);
+  $('cartCount').style.display = count>0 ? 'flex':'none';
+  $('cartCount').textContent = count;
+
+  if(state.cart.length===0){
+    $('cartBody').innerHTML = `<div class="empty-state"><div class="ic">🛍️</div>Your cart is empty.<br>Add the dock or an accessory to get started.</div>`;
+    $('cartFoot').style.display='none';
+    return;
+  }
+  $('cartFoot').style.display='block';
+  $('cartBody').innerHTML = state.cart.map(c=>{
+    const p = PRODUCTS[c.id];
+    return `<div class="cart-row">
+      <div class="cart-thumb">${p.photo?`<img src="beurer-hero.jpg" alt="">`:p.emoji}</div>
+      <div class="cart-info">
+        <b>${p.name}</b>
+        <div class="qty-ctrl">
+          <button onclick="changeQty('${c.id}',-1)">−</button>
+          <span class="tech">${c.qty}</span>
+          <button onclick="changeQty('${c.id}',1)">+</button>
+        </div>
+        <button class="remove-x" onclick="removeItem('${c.id}')">Remove</button>
+      </div>
+      <div class="cart-price">${money(p.price*c.qty)}</div>
+    </div>`;
+  }).join('');
+  const t = cartTotals();
+  $('sumSubtotal').textContent = money(t.subtotal);
+  $('sumShipping').textContent = t.shipping===0 ? 'Free' : money(t.shipping);
+  $('sumTotal').textContent = money(t.total);
+}
+function toggleDrawer(open){
+  $('drawerOverlay').classList.toggle('open', open);
+  $('cartDrawer').classList.toggle('open', open);
+}
+
+/* ---------- checkout ---------- */
+function openCheckout(){
+  if(state.cart.length===0){ toast('Your cart is empty'); return; }
+  toggleDrawer(false);
+  $('checkoutOverlay').classList.add('open');
+  goStep(1);
+  $('payAmount').textContent = money(cartTotals().total);
+}
+function goStep(n){
+  [1,2,3].forEach(i=>{
+    $('checkoutStep'+i).style.display = (i===n)?'block':'none';
+    $('dot'+i).classList.toggle('active', i<=n);
+  });
+}
+function formatCard(el){
+  el.value = el.value.replace(/[^0-9]/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+}
+function formatExp(el){
+  let v = el.value.replace(/[^0-9]/g,'').slice(0,4);
+  if(v.length>=3) v = v.slice(0,2)+'/'+v.slice(2);
+  el.value = v;
+}
+function placeOrder(){
+  const num = $('cardNumber').value.replace(/\s/g,'');
+  if(num.length<12 || !$('cardExp').value || !$('cardCvv').value){
+    toast('Enter mock card details to continue'); return;
+  }
+  $('orderId').textContent = 'ORDER #BEU-'+Math.floor(100000+Math.random()*899999);
+  goStep(3);
+  state.cart = [];
+  renderCart();
+  addPoints(30,'completed mock checkout');
+}
+
+/* ---------- sentiment-based review AI ---------- */
+const POSITIVE_WORDS = ['love','great','amazing','smooth','shiny','soft','relax','perfect','fast','easy','gentle','wonderful','glow','recommend','happy'];
+const NEGATIVE_WORDS = ['bad','slow','hurt','pain','broke','disappoint','rough','loud','expensive','waste','difficult','poor','stopped','never'];
+
+function analyzeSentiment(text){
+  const t = text.toLowerCase();
+  let pos=0, neg=0;
+  POSITIVE_WORDS.forEach(w=>{ if(t.includes(w)) pos++; });
+  NEGATIVE_WORDS.forEach(w=>{ if(t.includes(w)) neg++; });
+  if(pos>neg) return 'positive';
+  if(neg>pos) return 'negative';
+  return 'neutral';
+}
+document.addEventListener('DOMContentLoaded', ()=>{
+  $('reviewText').addEventListener('input', (e)=>{
+    const text = e.target.value.trim();
+    const box = $('sentimentPreview');
+    if(text.length<4){ box.classList.remove('show'); return; }
+    const s = analyzeSentiment(text);
+    box.classList.add('show');
+    box.className = 'sentiment-preview show '+s;
+    const labels = {positive:'🩷 Reads as: Loved it', negative:'🔧 Reads as: Needs improvement', neutral:'💬 Reads as: Mixed / neutral'};
+    box.textContent = labels[s];
+  });
+});
+function submitReview(){
+  const text = $('reviewText').value.trim();
+  if(text.length<4){ toast('Write a few words first'); return; }
+  const sentiment = analyzeSentiment(text);
+  const name = state.user ? state.user.name : 'Guest';
+  state.reviews.unshift({name, text, sentiment, stars: sentiment==='positive'?5:(sentiment==='negative'?2:3)});
+  $('reviewText').value='';
+  $('sentimentPreview').classList.remove('show');
+  renderReviews();
+  addPoints(15,'posted a review');
+}
+function renderReviews(){
+  const seed = [
+    {name:'Priya', text:'The scan felt so precise and my nails have never been this shiny — the lavender mist makes it feel like a real spa.', sentiment:'positive', stars:5},
+    {name:'Alex', text:'Good idea but the cycle stalled once on my ring finger and I had to restart it, a bit slow overall.', sentiment:'negative', stars:2},
+    {name:'Farah', text:'It works fine, does what it says, nothing especially exciting but nothing wrong either.', sentiment:'neutral', stars:3},
+  ];
+  const all = [...state.reviews, ...seed];
+  $('reviewList').innerHTML = all.map(r=>`
+    <div class="review-item">
+      <div class="review-item-head">
+        <b>${r.name}</b>
+        <span class="tag ${r.sentiment}">${r.sentiment==='positive'?'Loved it':r.sentiment==='negative'?'Needs improvement':'Mixed'}</span>
+      </div>
+      <div class="stars">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+      <p style="margin-top:6px;">${r.text}</p>
+    </div>`).join('');
+}
+
+/* ---------- AI chatbot (rule-based) ---------- */
+function toggleChat(){ $('chatPanel').classList.toggle('open'); }
+function askChat(q){ $('chatInput').value=q; sendChat(); }
+function sendChat(){
+  const input = $('chatInput');
+  const q = input.value.trim();
+  if(!q) return;
+  addMsg(q,'user');
+  input.value='';
+  setTimeout(()=>{
+    const reply = getBotReply(q);
+    addMsg(reply,'bot');
+  }, 350);
+}
+function addMsg(text, who){
+  const body = $('chatBody');
+  const div = document.createElement('div');
+  div.className = 'msg '+who;
+  div.textContent = text;
+  body.appendChild(div);
+  body.scrollTop = body.scrollHeight;
+}
+function getBotReply(q){
+  const t = q.toLowerCase();
+  for(const entry of CHAT_KB){
+    if(entry.k.some(k=>t.includes(k))) return entry.a;
+  }
+  return "Great question — I don't have that exact detail yet, but you can ask about price, timing, safety, ingredients, the app or returns!";
+}
+
+/* ---------- close modals on outside click ---------- */
+document.addEventListener('DOMContentLoaded', ()=>{
+  ['loginOverlay','checkoutOverlay'].forEach(id=>{
+    $(id).addEventListener('click', (e)=>{ if(e.target.id===id) closeModal(id); });
+  });
+});
+</script>
+</body>
+</html>
